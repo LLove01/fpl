@@ -17,6 +17,7 @@ function NavigationMenu() {
                                 <li><Link to="/transfer-trends">Transfer Trends</Link></li>
                                 <li><Link to="/about">About</Link></li>
                                 <li><Link to="/profile">Profile</Link></li>
+                                <li><Link to="/optimize-team">Optimize Team</Link></li>
                                 <li><Link to="/logout">Logout ({user.username})</Link></li>
                             </>
                             :

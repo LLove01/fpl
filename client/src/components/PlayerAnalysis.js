@@ -211,7 +211,7 @@ const PlayerAnalysis = () => {
                                         <th className={`sortable ${sortedColumn === 'team' ? 'active' : ''}`} onClick={() => handleColumnClick('team')}>Team</th>
                                         <th className={`sortable ${sortedColumn === 'points' ? 'active' : ''}`} onClick={() => handleColumnClick('points')}>Points</th>
                                         <th className={`sortable ${sortedColumn === 'price' ? 'active' : ''}`} onClick={() => handleColumnClick('price')}>Price (£)</th>
-                                        <th className={`sortable ${sortedColumn === 'ppm' ? 'active' : ''}`} onClick={() => handleColumnClick('ppm')}>Price per Million</th>
+                                        <th className={`sortable ${sortedColumn === 'ppm' ? 'active' : ''}`} onClick={() => handleColumnClick('ppm')}>Points per Million</th>
                                         <th className={`sortable ${sortedColumn === 'ict' ? 'active' : ''}`} onClick={() => handleColumnClick('ict')}>ICT Index</th>
                                     </tr>
                                 </thead>

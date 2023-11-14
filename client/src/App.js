@@ -8,6 +8,7 @@ import TransferTrends from './components/TransferTrends';
 import About from './components/About';
 import Profile from './components/Profile';
 import Leagues from './components/Leagues';
+import OptimizeTeam from './components/OptimizeTeam';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import './App.css';
@@ -36,6 +37,7 @@ function App() {
             <Route path="/leagues/:league_id" element={<Leagues />} />
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/optimize-team" element={<OptimizeTeam />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/logout" element={<Logout />} />
