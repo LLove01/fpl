@@ -24,7 +24,7 @@ const Leagues = () => {
     }, [league_id]);
 
     return (
-        <div className="table-container">
+        <div className="table-container p-3">
             <h2>{leagueName} League Standings</h2>
             {error ? (
                 <p>{error}</p>

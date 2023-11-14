@@ -63,7 +63,7 @@ const TransferTrends = () => {
     );
 
     return (
-        <div className="table-container m-3">
+        <div className="table-container p-3">
             <h2>Transfer Trends</h2>
             <input
                 type="text"

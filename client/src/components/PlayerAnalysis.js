@@ -192,7 +192,7 @@ const PlayerAnalysis = () => {
     };
 
     return (
-        <div>
+        <div className="p-3">
             <h2>Player Analysis</h2>
             <input
                 type="text"

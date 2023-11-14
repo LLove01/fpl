@@ -43,7 +43,7 @@ const TeamInsights = () => {
     }
 
     return (
-        <div className="table-container m-3">
+        <div className="table-container p-3">
             <h2>Team Insights</h2>
             <table>
                 <thead>
