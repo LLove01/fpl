@@ -22,6 +22,10 @@ function App() {
     setUser(userInfo);
   }
 
+  useEffect(() => {
+    document.title = "FPL Analytics";
+  }, []);
+
   return (
     <BrowserRouter>
       <UserContext.Provider value={{
