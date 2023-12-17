@@ -14,9 +14,26 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppTheme.Fragment" parent="Theme.FplAnalytics">
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Theme.FplAnalytics">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <!--<item name="android:background">@drawable/my_button_style</item>-->
+        <item name="android:radius">24dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="Theme.FplAnalytics.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TextView" parent="Theme.FplAnalytics">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Theme.FplAnalytics.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

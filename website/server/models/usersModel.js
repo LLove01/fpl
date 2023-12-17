@@ -5,7 +5,8 @@ var Schema   = mongoose.Schema;
 var usersSchema = new Schema({
 	'username' : String,
 	'password' : String,
-	'managerId' : Number
+	'managerId' : Number,
+	'competetorsIds' : Array
 });
 
 usersSchema.statics.authenticate = function(username, password, callback) {
