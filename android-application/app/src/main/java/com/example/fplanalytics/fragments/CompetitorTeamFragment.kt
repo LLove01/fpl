@@ -53,28 +53,67 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         // Array of competitors
         val competitorsManagerList = app.user?.competitors
 
-        if (competitorsManagerList!!.isNotEmpty()) {
-            // If we already have competitors in list
-            addSpinnerAndEvents(view, competitorsManagerList)
-        } else {
-            // If we don't have any competitors in list
-            buttonAdd.setOnClickListener {
-                if (managerIdInput.text.isNotEmpty()) {
-                    val competitorId = managerIdInput.text.toString().toInt()
-                    managerIdInput.text.clear()
-                    addCompetitor(view, competitorId, competitorsManagerList)
-                } else {
-                    Snackbar.make(
-                        view,
-                        "Please insert competitor id!",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
+        // If we already have competitors in list
+        val spinner: Spinner = spinner
+
+        // Extract names from CompetitorsManagerList and create a list of names
+        // We need to do this because adapter for spinner need MutableList<String> instead of MutableList<CompetitorManager>
+        val competitorListForAdapter: MutableList<String> =
+            competitorsManagerList!!.map { it.managerName } as MutableList<String>
+
+        // Create an ArrayAdapter using the defined array
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            competitorListForAdapter
+        )
+
+        // Set dropdown layout style
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Set the adapter to the spinner
+        spinner.adapter = adapter
+
+        // Add item selected listener to the spinner
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view2: View?,
+                position: Int,
+                id: Long
+            ) {
+                // When item is selected we need to get the managerId from the bigger list
+                val selectedItemManagerId: Int = competitorsManagerList[position].id
+                getData(view, selectedItemManagerId.toString())
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Do something when nothing is selected
+            }
+        }
+
+        // We have different event if we already have something in the list
+        buttonAdd.setOnClickListener {
+            if (managerIdInput.text.isNotEmpty()) {
+                val competitorId = managerIdInput.text.toString().toInt()
+                managerIdInput.text.clear()
+                addCompetitor(view, competitorId, adapter, competitorListForAdapter)
+            } else {
+                Snackbar.make(
+                    view,
+                    "Please insert competitor id!",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
     }
 
-    private fun addCompetitor(view: View, competitorId: Int, competitorsManagerList: MutableList<CompetitorManager>) {
+    private fun addCompetitor(
+        view: View,
+        competitorId: Int,
+        adapter: ArrayAdapter<String>,
+        competitorListForAdapter: MutableList<String>
+    ) {
         // Create JSON using JSONObject
         val jsonObjectToSend = JSONObject()
         jsonObjectToSend.put("competirorsIds", competitorId)
@@ -110,8 +149,12 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
 
                             val name = jsonObject.get("name").asString
                             app.user?.competitors?.add(CompetitorManager(name, competitorId))
-                            addSpinnerAndEvents(view, competitorsManagerList)
-                            println(rawJson)
+                            competitorListForAdapter.add(name)
+                            adapter.notifyDataSetChanged()
+
+                            if(app.user?.competitors?.size == 1){
+                                getData(view, competitorId.toString())
+                            }
                         }
                     } else {
                         Snackbar.make(
@@ -133,66 +176,10 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         }
     }
 
-    private fun addSpinnerAndEvents(
+    private fun getData(
         view: View,
-        competitorsManagerList: MutableList<CompetitorManager>
+        managerId: String?
     ) {
-        val spinner: Spinner = spinner
-
-        // Extract names from CompetitorsManagerList and create a list of names
-        // We need to do this because adapter for spinner need MutableList<String> instead of MutableList<CompetitorManager>
-        val competitorNames: MutableList<String> =
-            competitorsManagerList.map { it.managerName } as MutableList<String>
-
-        // Create an ArrayAdapter using the defined array
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            competitorNames
-        )
-
-        // Set dropdown layout style
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        // Set the adapter to the spinner
-        spinner.adapter = adapter
-
-        // Add item selected listener to the spinner
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view2: View?,
-                position: Int,
-                id: Long
-            ) {
-                // When item is selected we need to get the managerId from the bigger list
-                val selectedItemManagerId: Int = competitorsManagerList[position].id
-                getDataAndSetVisibilityAfterReceivingIt(view, selectedItemManagerId.toString())
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do something when nothing is selected
-            }
-        }
-
-        // We have different event if we already have something in the list
-        buttonAdd.setOnClickListener {
-            if (managerIdInput.text.isNotEmpty()) {
-                val competitorId = managerIdInput.text.toString().toInt()
-                managerIdInput.text.clear()
-                addCompetitor(view, competitorId, competitorsManagerList)
-                adapter.notifyDataSetChanged()
-            } else {
-                Snackbar.make(
-                    view,
-                    "Please insert competitor id!",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    private fun getDataAndSetVisibilityAfterReceivingIt(view: View, managerId: String?) {
         CoroutineScope(Dispatchers.IO).launch {
             val call: Call<ResponseBody> = app.fplService.getManagerData(managerId)
 
@@ -206,12 +193,11 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                         var rawJson = response.body()?.string()
                         rawJson = rawJson!!.trimIndent()
                         competitorFullManager = Json.decodeFromString<Manager>(rawJson)
-                        println(competitorFullManager)
 
                         setTextViewValues()
 
-                        val adapter = PlayerAdapter(competitorFullManager.players)
-                        recyclerview2.adapter = adapter
+                        val adapterForRecycleView = PlayerAdapter(competitorFullManager.players)
+                        recyclerview2.adapter = adapterForRecycleView
 
                         setVisibility()
                     } else {
