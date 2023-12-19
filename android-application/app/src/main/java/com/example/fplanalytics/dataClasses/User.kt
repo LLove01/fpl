@@ -8,5 +8,8 @@ data class User(
     var username: String,
 
     @SerialName("managerId")
-    var managerId: String
+    var managerId: String,
+
+    @SerialName("competitors")
+    var competitors: MutableList<CompetitorManager>
 ) {}

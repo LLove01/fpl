@@ -2,14 +2,14 @@ package com.example.fplanalytics.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.fplanalytics.MainActivity
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
+import com.example.fplanalytics.dataClasses.CompetitorManager
 import com.example.fplanalytics.dataClasses.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
@@ -23,6 +23,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.UnknownHostException
+
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var app: MyApplication
@@ -74,9 +75,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         app.saveUser(
                             User(
                                 jsonObject.getString("username"),
-                                jsonObject.getString("managerId")
+                                jsonObject.getString("managerId"),
+                                mutableListOf()
                             )
                         )
+
+                        val mainActivity = requireActivity() as MainActivity
+                        mainActivity.updateNavigationMenuForLoggedInUser()
+                        mainActivity.setHomeAsSelected()
 
                         // navigate to home fragment
                         val action =
@@ -91,6 +97,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             "Wrong username or password",
                             Snackbar.LENGTH_LONG
                         ).show()
+                        editTextUserName.setText("")
+                        editTextUserPassword.setText("")
                     }
                 }
             } catch (exception: Exception) {

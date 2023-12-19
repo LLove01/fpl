@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
+import com.example.fplanalytics.dataClasses.CompetitorManager
 import com.example.fplanalytics.dataClasses.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.JsonParser
@@ -69,7 +70,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                         app.saveUser(
                             User(
                                 jsonObject.getString("username"),
-                                jsonObject.getString("managerId")
+                                jsonObject.getString("managerId"),
+                                mutableListOf()
                             )
                         )
 

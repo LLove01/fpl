@@ -7,39 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment">
 
-    <Button
-        android:id="@+id/buttonPlayerAnalysis"
-        style="@style/AppTheme.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/button_marginBottom"
-        android:text="@string/player_analysis"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLogout"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
-        app:layout_constraintStart_toStartOf="@+id/guideline6" />
-
-    <Button
-        android:id="@+id/buttonLogout"
-        style="@style/AppTheme.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/button_marginBottom"
-        android:text="@string/logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
-        app:layout_constraintStart_toStartOf="@+id/guideline6" />
-
-
-    <TextView
-        android:id="@+id/textViewHelloUser"
-        style="@style/AppTheme.TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_username"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
@@ -48,23 +15,53 @@
         app:layout_constraintGuide_percent="0.04" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_middle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.96" />
 
+
+    <TextView
+        android:id="@+id/textViewLoading"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="@+id/guideline6"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textViewManagerName"
         style="@style/AppTheme.TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/manager_name"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewManagerNameLabel"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manager_name_label"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
-        app:layout_constraintTop_toBottomOf="@id/textViewHelloUser" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewNationality"
@@ -73,8 +70,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/nationality"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewManagerName" />
+
+    <TextView
+        android:id="@+id/textViewNationalityLabel"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/nationality_label"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/textViewManagerName" />
 
@@ -85,8 +94,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/favourite_team"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNationality" />
+
+    <TextView
+        android:id="@+id/textViewFavouriteTeamLabel"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/favourite_team_label"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/textViewNationality" />
 
@@ -97,8 +118,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/current_rank"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFavouriteTeam" />
+
+    <TextView
+        android:id="@+id/textViewCurrentRankLabel"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/current_rank_label"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/textViewFavouriteTeam" />
 
@@ -109,23 +142,41 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/total_points"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentRank" />
+
+    <TextView
+        android:id="@+id/textViewTotalPointsLabel"
+        style="@style/AppTheme.TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/total_points_label"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/textViewCurrentRank" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.92" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:layout_gravity="bottom"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/buttonPlayerAnalysis"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@+id/textViewTotalPoints"
-        tools:ignore="MissingConstraints" />
-
+        android:visibility="invisible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

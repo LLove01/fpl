@@ -13,4 +13,4 @@ data class Player(
 
     @SerialName("element_type")
     val elementType: Int
-)
+){}

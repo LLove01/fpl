@@ -17,20 +17,35 @@
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
     <string name="motto">Your favourite FPL tracking app</string>
+    <string name="logo_image">Logo Image</string>
 
     <!-- HomeFragment -->
-    <string name="player_analysis">Player analysis</string>
-    <string name="manager_name">Manager name</string>
-    <string name="nationality">Nationality</string>
+    <string name="manager_name">Name</string>
+    <string name="nationality">Country</string>
     <string name="favourite_team">Favourite team</string>
     <string name="current_rank">Current rank</string>
     <string name="total_points">Total points</string>
-    <string name="hello_username">Hello %1s</string>
-    <string name="logout">Logout</string>
+    <string name="manager_name_label">Name:</string>
+    <string name="nationality_label">Country:</string>
+    <string name="favourite_team_label">Favourite team:</string>
+    <string name="current_rank_label">Current rank:</string>
+    <string name="total_points_label">Total points:</string>
+    <string name="loading">Loading, please wait . . .</string>
 
     <!-- CardView -->
     <string name="player_type">Player type</string>
     <string name="player_name">Player name</string>
+
+    <!-- CompetitorFragment -->
+    <string name="manager_id">4</string>
+    <string name="manager_id_input">Competitor id:</string>
+
+    <!-- Navbar -->
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="competitor">Competitor</string>
+    <string name="registerIc">Register</string>
+    <string name="loginIc">Login</string>
 
     <!-- Common -->
     <string name="requiredField">This field is required</string>

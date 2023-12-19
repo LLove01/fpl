@@ -2,75 +2,60 @@ package com.example.fplanalytics.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import com.example.fplanalytics.MainActivity
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
 import com.example.fplanalytics.adapters.PlayerAdapter
 import com.example.fplanalytics.dataClasses.Manager
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import timber.log.Timber
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var app: MyApplication
+    private lateinit var myManager: Manager
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         app = (activity?.application as MyApplication)
 
-        textViewHelloUser.text = getString(R.string.hello_username, app.getUser()?.username ?: "")
-        textViewManagerName.text = app.myManager.managerFirstName + " " + app.myManager.managerSecondName
-        textViewNationality.text = app.myManager.country
-        textViewFavouriteTeam.text = app.myManager.favouriteTeam
-        textViewCurrentRank.text = app.myManager.currentRank.toString()
-        textViewTotalPoints.text = app.myManager.totalPoints.toString()
-
-        val adapter = PlayerAdapter(app.myManager.players)
-
-        recyclerview.adapter = adapter
-
-        buttonPlayerAnalysis.setOnClickListener {
-            Timber.d("Manager id:" + app.getUser()?.managerId)
-            println(app.myManager)
-            //getData(view, app.getUser()?.managerId)
-            //val action = HomeFragmentDirections.actionHomeFragmentToCompetitorTeamFragment()
-            //findNavController().navigate(action)
-        }
-
-        buttonLogout.setOnClickListener {
-            app.logoutUser()
-
-            val action = HomeFragmentDirections.actionHomeFragmentToWelcomeFragment()
-            findNavController().navigate(action)
-        }
+        getData(view, app.user!!.managerId)
     }
 
-    /*
-    private fun getData(view: View, managerId: String?) {
+    private fun getData(view:View, managerId: String?) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call: Call<Manager> = app.fplService.generalInfo()
+            val call: Call<ResponseBody> = app.fplService.getManagerData(managerId)
 
             // Asynchronous call
-            call.enqueue(object : Callback<Manager> {
-                override fun onResponse(call: Call<Manager>, response: Response<Manager>) {
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
-                        val data: Manager? = response.body()
-                        if (data != null) {
+                        var rawJson = response.body()?.string()
+                        rawJson = rawJson!!.trimIndent()
+                        myManager = Json.decodeFromString<Manager>(rawJson)
+                        println(myManager)
 
-                        }
+                        setTextViewValues()
+
+                        val adapter = PlayerAdapter(myManager.players)
+                        recyclerview.adapter = adapter
+
+                        setVisibility()
                     } else {
                         Snackbar.make(
                             view,
@@ -80,7 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
 
-                override fun onFailure(call: Call<Manager>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Snackbar.make(
                         view,
                         "FAILED GENERAL INFO!",
@@ -90,21 +75,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             })
         }
     }
-     */
 
-    /*
-    private fun extractElements(rawJson: String?): String {
-        var result = ""
-        if (!rawJson.isNullOrEmpty()) {
-            val startIndex = rawJson.indexOf("elements")
-            if (startIndex != -1) {
-                val endIndex = rawJson.indexOf(']', startIndex)
-                if (endIndex != -1) {
-                    result = rawJson.substring(startIndex - 1, rawJson.indexOf(']', endIndex) + 1)
-                }
-            }
-        }
-        return "{$result}"
+    @SuppressLint("SetTextI18n")
+    private fun setTextViewValues() {
+        textViewManagerName.text = myManager.managerFirstName + " " + myManager.managerSecondName
+        textViewNationality.text = myManager.country
+        textViewFavouriteTeam.text = myManager.favouriteTeam
+        textViewCurrentRank.text = myManager.currentRank.toString()
+        textViewTotalPoints.text = myManager.totalPoints.toString()
     }
-     */
+
+    private fun setVisibility() {
+        textViewManagerName.visibility = View.VISIBLE
+        textViewNationality.visibility = View.VISIBLE
+        textViewFavouriteTeam.visibility = View.VISIBLE
+        textViewCurrentRank.visibility = View.VISIBLE
+        textViewTotalPoints.visibility = View.VISIBLE
+        textViewManagerNameLabel.visibility = View.VISIBLE
+        textViewNationalityLabel.visibility = View.VISIBLE
+        textViewFavouriteTeamLabel.visibility = View.VISIBLE
+        textViewCurrentRankLabel.visibility = View.VISIBLE
+        textViewTotalPointsLabel.visibility = View.VISIBLE
+        recyclerview.visibility = View.VISIBLE
+        textViewLoading.visibility = View.INVISIBLE
+    }
 }

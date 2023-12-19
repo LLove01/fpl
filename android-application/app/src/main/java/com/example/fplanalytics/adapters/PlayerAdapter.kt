@@ -10,7 +10,8 @@ import com.example.fplanalytics.dataClasses.Player
 import com.example.fplanalytics.R
 import timber.log.Timber
 
-class PlayerAdapter(private val data: List<Player>) : RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
+class PlayerAdapter(private val data: List<Player>) :
+    RecyclerView.Adapter<PlayerAdapter.ViewHolder>() {
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val playerName: TextView = itemView.findViewById(R.id.playerName)
         val playerType: TextView = itemView.findViewById(R.id.playerType)
@@ -33,7 +34,12 @@ class PlayerAdapter(private val data: List<Player>) : RecyclerView.Adapter<Playe
         // sets the text to the textview from our itemHolder class
         Timber.d("MM onBindViewHolder ${data.size}")
         holder.playerName.text = itemsViewModel.firstName + " " + itemsViewModel.secondName
-        holder.playerType.text = itemsViewModel.elementType.toString()
+        holder.playerType.text = when (itemsViewModel.elementType) {
+            1 -> "GKP"
+            2 -> "DEF"
+            3 -> "MID"
+            else -> "FWD"
+        }
     }
 }
 

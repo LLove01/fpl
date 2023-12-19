@@ -1,10 +1,33 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.fplanalytics.MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Items for logged-out users -->
+    <group android:id="@+id/logged_out_group">
+        <item
+            android:id="@+id/menu_login"
+            android:title="@string/loginIc"
+            android:icon="@drawable/ic_login_black_24dp" />
+
+        <item
+            android:id="@+id/menu_register"
+            android:title="@string/registerIc"
+            android:icon="@drawable/ic_register_black_24dp" />
+    </group>
+
+    <!-- Items for logged-in users -->
+    <group android:id="@+id/logged_in_group">
+        <item
+            android:id="@+id/navigation_competitor"
+            android:icon="@drawable/ic_competitor_black_24dp"
+            android:title="@string/competitor" />
+
+        <item
+            android:id="@+id/navigation_profile"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/profile" />
+
+        <item
+            android:id="@+id/navigation_logout"
+            android:icon="@drawable/ic_logout_black_24dp"
+            android:title="@string/logout" />
+    </group>
 </menu>

@@ -8,16 +8,19 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.fplanalytics.fragments.LoginFragment"
-        android:label="fragment_login"
+        android:label="Login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment2"
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.fplanalytics.fragments.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Register"
         tools:layout="@layout/fragment_register" >
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
@@ -26,7 +29,7 @@
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.example.fplanalytics.fragments.WelcomeFragment"
-        android:label="fragment_welcome"
+        android:label="Welcome"
         tools:layout="@layout/fragment_welcome" >
         <action
             android:id="@+id/action_welcomeFragment_to_registerFragment"
@@ -38,7 +41,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.fplanalytics.fragments.HomeFragment"
-        android:label="fragment_home"
+        android:label="My team"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_welcomeFragment"
@@ -50,6 +53,13 @@
     <fragment
         android:id="@+id/competitorTeamFragment"
         android:name="com.example.fplanalytics.fragments.CompetitorTeamFragment"
-        android:label="fragment_competitor_team"
-        tools:layout="@layout/fragment_competitor_team" />
+        android:label="Competitor teams"
+        tools:layout="@layout/fragment_competitor_team" >
+        <action
+            android:id="@+id/action_competitorTeamFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_competitorTeamFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
 </navigation>

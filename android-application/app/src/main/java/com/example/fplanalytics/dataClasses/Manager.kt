@@ -25,4 +25,4 @@ data class Manager(
 
     @SerialName("players")
     val players: List<Player>
-)
+){}
