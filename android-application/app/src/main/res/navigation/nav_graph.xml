@@ -43,5 +43,13 @@
         <action
             android:id="@+id/action_homeFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_competitorTeamFragment"
+            app:destination="@id/competitorTeamFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/competitorTeamFragment"
+        android:name="com.example.fplanalytics.fragments.CompetitorTeamFragment"
+        android:label="fragment_competitor_team"
+        tools:layout="@layout/fragment_competitor_team" />
 </navigation>

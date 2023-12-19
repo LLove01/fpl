@@ -19,12 +19,18 @@
     <string name="motto">Your favourite FPL tracking app</string>
 
     <!-- HomeFragment -->
-    <string name="playerAnalysis">Player analysis</string>
-    <string name="homefragmenttest">Home fragment test</string>
+    <string name="player_analysis">Player analysis</string>
+    <string name="manager_name">Manager name</string>
+    <string name="nationality">Nationality</string>
+    <string name="favourite_team">Favourite team</string>
+    <string name="current_rank">Current rank</string>
+    <string name="total_points">Total points</string>
     <string name="hello_username">Hello %1s</string>
     <string name="logout">Logout</string>
 
-
+    <!-- CardView -->
+    <string name="player_type">Player type</string>
+    <string name="player_name">Player name</string>
 
     <!-- Common -->
     <string name="requiredField">This field is required</string>

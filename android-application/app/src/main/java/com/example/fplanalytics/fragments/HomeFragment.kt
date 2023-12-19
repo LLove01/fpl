@@ -1,32 +1,53 @@
 package com.example.fplanalytics.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
+import com.example.fplanalytics.adapters.PlayerAdapter
+import com.example.fplanalytics.dataClasses.Manager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 
+
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var app: MyApplication
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         app = (activity?.application as MyApplication)
 
         textViewHelloUser.text = getString(R.string.hello_username, app.getUser()?.username ?: "")
+        textViewManagerName.text = app.myManager.managerFirstName + " " + app.myManager.managerSecondName
+        textViewNationality.text = app.myManager.country
+        textViewFavouriteTeam.text = app.myManager.favouriteTeam
+        textViewCurrentRank.text = app.myManager.currentRank.toString()
+        textViewTotalPoints.text = app.myManager.totalPoints.toString()
+
+        val adapter = PlayerAdapter(app.myManager.players)
+
+        recyclerview.adapter = adapter
 
         buttonPlayerAnalysis.setOnClickListener {
-            getData(view)
+            Timber.d("Manager id:" + app.getUser()?.managerId)
+            println(app.myManager)
+            //getData(view, app.getUser()?.managerId)
+            //val action = HomeFragmentDirections.actionHomeFragmentToCompetitorTeamFragment()
+            //findNavController().navigate(action)
         }
 
         buttonLogout.setOnClickListener {
@@ -37,18 +58,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun getData(view: View) {
+    /*
+    private fun getData(view: View, managerId: String?) {
         CoroutineScope(Dispatchers.IO).launch {
-            //try {
-            val call: Call<Map<String, Any>> = app.fplService.generalInfo()
+            val call: Call<Manager> = app.fplService.generalInfo()
 
             // Asynchronous call
-            call.enqueue(object : Callback<Map<String, Any>> {
-                override fun onResponse(call: Call<Map<String, Any>>, response: Response<Map<String, Any>>) {
+            call.enqueue(object : Callback<Manager> {
+                override fun onResponse(call: Call<Manager>, response: Response<Manager>) {
                     if (response.isSuccessful) {
-                        val data: Map<String, Any>? = response.body()
+                        val data: Manager? = response.body()
                         if (data != null) {
-                            Timber.d(data["events"].toString())
+
                         }
                     } else {
                         Snackbar.make(
@@ -59,7 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
 
-                override fun onFailure(call: Call<Map<String, Any>>, t: Throwable) {
+                override fun onFailure(call: Call<Manager>, t: Throwable) {
                     Snackbar.make(
                         view,
                         "FAILED GENERAL INFO!",
@@ -67,60 +88,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     ).show()
                 }
             })
-            /*withContext(Dispatchers.Main) {
-                if (responseFromServer.isSuccessful) {
-                    // Convert raw JSON to pretty JSON using GSON library
-                    val gson = app.getGsonInstance()
-                    val prettyJson = gson.toJson(
-                        JsonParser.parseString(
-                            responseFromServer.body()
-                                ?.string()
-                        )
-                    )
-                    val jsonObject: JSONObject = JSONObject(prettyJson)
-                    // get user's data from json and save it in object
-                    app.saveUser(
-                        User(
-                            jsonObject.getString("username"),
-                            jsonObject.getString("managerId")
-                        )
-                    )
-
-                    // navigate to home fragment
-                    val action =
-                        LoginFragmentDirections.actionLoginFragmentToHomeFragment()
-
-                    findNavController().navigate(action)
-                    return@withContext
-                } else {
-                    // show snackbar with warning that login was NOT successful
-                    Snackbar.make(
-                        view,
-                        "Wrong username or password",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            }
-        } catch (exception: Exception) {
-            when (exception) {
-                is ConnectException -> {
-                    // show snackbar with warning that sending data was NOT successful
-                    Snackbar.make(
-                        view,
-                        "Can not connect to server",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-                is UnknownHostException -> {
-                    // show snackbar with warning that sending data was NOT successful
-                    Snackbar.make(
-                        view,
-                        "Can not connect to server",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }*/
         }
     }
+     */
+
+    /*
+    private fun extractElements(rawJson: String?): String {
+        var result = ""
+        if (!rawJson.isNullOrEmpty()) {
+            val startIndex = rawJson.indexOf("elements")
+            if (startIndex != -1) {
+                val endIndex = rawJson.indexOf(']', startIndex)
+                if (endIndex != -1) {
+                    result = rawJson.substring(startIndex - 1, rawJson.indexOf(']', endIndex) + 1)
+                }
+            }
+        }
+        return "{$result}"
+    }
+     */
 }
