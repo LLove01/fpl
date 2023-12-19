@@ -37,7 +37,7 @@
     <string name="player_name">Player name</string>
 
     <!-- CompetitorFragment -->
-    <string name="manager_id">4</string>
+    <string name="manager_id" />
     <string name="manager_id_input">Competitor id:</string>
 
     <!-- Navbar -->

@@ -114,6 +114,7 @@ module.exports = {
      */
     update: function (req, res) {
         var managerId = req.params.id;
+        console.log(managerId)
         UsersModel.findOne({managerId: managerId}, function (err, user) {
             if (err) {
                 return res.status(500).json({
@@ -131,9 +132,11 @@ module.exports = {
             let comptetitorId = parseInt(req.body.competirorsIds);
             let competitors = user.competitorsIds;
 
-            const index = competitors.findIndex(competitor => competitor.id === comptetitorId.id);
-
-            if (index !== -1) {
+            const includes = competitors.includes(comptetitorId)
+            if (!includes || competitors.length == 0) {
+                user.username = req.body.username ? req.body.username : user.username;
+                user.password = req.body.password ? req.body.password : user.password;
+                user.managerId = req.body.managerId? req.body.managerId: user.managerId;
                 user.competirorsIds = req.body.competirorsIds ? competitors.push(comptetitorId) : user.competirorsIds;
                 user.save(async function (err, user) {
                     if (err) {
@@ -143,12 +146,11 @@ module.exports = {
                         });
                     }
                     const responseManagerData = await axios.get(`${BASE_URL}entry/${comptetitorId}`);
-
                     const firstName = responseManagerData.data.player_first_name;
                     const lastName = responseManagerData.data.player_last_name;
-
                     return res.status(200).json({name: firstName + " " + lastName});
                 });
+                
             } else {
                 return res.json("object already in array!");
             }

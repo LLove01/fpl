@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -71,12 +72,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             )
                         )
                         val jsonObject: JSONObject = JSONObject(prettyJson)
+
                         // get user's data from json and save it in object
+
+                        /// json to mutableList as in @User dataClass
+                        val competitorsArrayJson: JSONArray = jsonObject.getJSONArray("competitors")
+
+                        val mutableList: MutableList<CompetitorManager> = mutableListOf()
+                        for (i in 0 until competitorsArrayJson.length()) {
+                            val element: JSONObject = competitorsArrayJson[i] as JSONObject
+                            mutableList.add(CompetitorManager(element.getString("name"), element.getString("id").toInt()))
+                        }
+
                         app.saveUser(
                             User(
                                 jsonObject.getString("username"),
                                 jsonObject.getString("managerId"),
-                                mutableListOf()
+                                mutableList
                             )
                         )
 

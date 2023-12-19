@@ -31,13 +31,17 @@ usersSchema.statics.authenticate = function(username, password, callback) {
 //before we save user to database this function will be called
 usersSchema.pre('save', function(next) {
 	var user = this;
-	bcrypt.hash(user.password, 10, function(error, hash) {
-		if (error) {
-			return next(error);
-		}
-		user.password = hash;
+	if(user.password.length<10){
+		bcrypt.hash(user.password, 10, function(error, hash) {
+			if (error) {
+				return next(error);
+			}
+			user.password = hash;
+			next();
+		});
+	}else{
 		next();
-	});
+	}
 });
 
 var User = mongoose.model('users', usersSchema);

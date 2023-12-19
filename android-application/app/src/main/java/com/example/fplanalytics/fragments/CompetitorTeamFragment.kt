@@ -7,12 +7,18 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.fplanalytics.MainActivity
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
 import com.example.fplanalytics.adapters.PlayerAdapter
 import com.example.fplanalytics.dataClasses.CompetitorManager
 import com.example.fplanalytics.dataClasses.Manager
+import com.example.fplanalytics.dataClasses.User
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_competitor_team.buttonAdd
 import kotlinx.android.synthetic.main.fragment_competitor_team.managerIdInput
 import kotlinx.android.synthetic.main.fragment_competitor_team.recyclerview2
@@ -27,15 +33,24 @@ import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationali
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationalityLabel2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPoints2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPointsLabel2
+import kotlinx.android.synthetic.main.fragment_login.editTextUserName
+import kotlinx.android.synthetic.main.fragment_login.editTextUserPassword
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
     private lateinit var app: MyApplication
@@ -55,9 +70,9 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
             // If we don't have any competitors in list
             buttonAdd.setOnClickListener {
                 if (managerIdInput.text.isNotEmpty()) {
-                    val managerId = managerIdInput.text.toString().toInt()
-                    app.user?.competitors?.add(CompetitorManager("ime$managerId", managerId))
-                    addSpinnerAndEvents(view, competitorsManagerList)
+                    val competitorId = managerIdInput.text.toString().toInt()
+                    managerIdInput.text.clear()
+                    addCompetitor(view, competitorId, competitorsManagerList)
                 } else {
                     Snackbar.make(
                         view,
@@ -66,6 +81,65 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                     ).show()
                 }
             }
+        }
+    }
+
+    private fun addCompetitor(view: View, competitorId: Int, competitorsManagerList: MutableList<CompetitorManager>) {
+        // Create JSON using JSONObject
+        val jsonObjectToSend = JSONObject()
+        jsonObjectToSend.put("competirorsIds", competitorId)
+
+        // Convert JSONObject to String
+        val jsonObjectStringToSend = jsonObjectToSend.toString()
+
+        // Create RequestBody
+        val requestBody =
+            jsonObjectStringToSend.toRequestBody("application/json".toMediaTypeOrNull())
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val call: Call<ResponseBody> = app.dbService.addCompetitor(app.user?.managerId, requestBody)
+
+            // Asynchronous call
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if (response.isSuccessful) {
+                        var rawJson = response.body()?.string()
+                        rawJson = rawJson!!.trimIndent()
+                        if(rawJson == "\"object already in array!\""){
+                            Snackbar.make(
+                                view,
+                                "You already have this competitor added!",
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }else{
+                            val gson = Gson()
+                            val jsonObject: JsonObject = gson.fromJson(rawJson, JsonObject::class.java)
+
+                            val name = jsonObject.get("name").asString
+                            app.user?.competitors?.add(CompetitorManager(name, competitorId))
+                            addSpinnerAndEvents(view, competitorsManagerList)
+                            println(rawJson)
+                        }
+                    } else {
+                        Snackbar.make(
+                            view,
+                            "FAILED GENERAL INFO!",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Snackbar.make(
+                        view,
+                        "FAILED GENERAL INFO!",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+            })
         }
     }
 
@@ -114,10 +188,9 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         // We have different event if we already have something in the list
         buttonAdd.setOnClickListener {
             if (managerIdInput.text.isNotEmpty()) {
-                val managerId = managerIdInput.text.toString().toInt()
-                println(managerId)
-                app.user?.competitors?.add(CompetitorManager("ime$managerId", managerId))
-                competitorNames.add("ime$managerId")
+                val competitorId = managerIdInput.text.toString().toInt()
+                managerIdInput.text.clear()
+                addCompetitor(view, competitorId, competitorsManagerList)
                 adapter.notifyDataSetChanged()
             } else {
                 Snackbar.make(
