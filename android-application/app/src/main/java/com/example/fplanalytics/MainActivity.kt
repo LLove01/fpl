@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateNavigationMenu(bottomNavigationView: BottomNavigationView) {
         val navMenu = bottomNavigationView.menu
-        if (app.getUser() != null) {
+        if (app.user != null) {
             navMenu.setGroupVisible(R.id.logged_in_group, true)
             navMenu.setGroupVisible(R.id.logged_out_group, false)
         } else {

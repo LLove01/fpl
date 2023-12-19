@@ -7,18 +7,14 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.example.fplanalytics.MainActivity
 import com.example.fplanalytics.MyApplication
 import com.example.fplanalytics.R
 import com.example.fplanalytics.adapters.PlayerAdapter
 import com.example.fplanalytics.dataClasses.CompetitorManager
 import com.example.fplanalytics.dataClasses.Manager
-import com.example.fplanalytics.dataClasses.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_competitor_team.buttonAdd
 import kotlinx.android.synthetic.main.fragment_competitor_team.managerIdInput
 import kotlinx.android.synthetic.main.fragment_competitor_team.recyclerview2
@@ -33,24 +29,18 @@ import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationali
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationalityLabel2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPoints2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPointsLabel2
-import kotlinx.android.synthetic.main.fragment_login.editTextUserName
-import kotlinx.android.synthetic.main.fragment_login.editTextUserPassword
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
-import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.net.ConnectException
-import java.net.UnknownHostException
 
 class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
     private lateinit var app: MyApplication
@@ -177,7 +167,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
             ) {
                 // When item is selected we need to get the managerId from the bigger list
                 val selectedItemManagerId: Int = competitorsManagerList[position].id
-                getDataAndSetVisibilityAfterRecivingIt(view, selectedItemManagerId.toString())
+                getDataAndSetVisibilityAfterReceivingIt(view, selectedItemManagerId.toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -202,7 +192,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         }
     }
 
-    private fun getDataAndSetVisibilityAfterRecivingIt(view: View, managerId: String?) {
+    private fun getDataAndSetVisibilityAfterReceivingIt(view: View, managerId: String?) {
         CoroutineScope(Dispatchers.IO).launch {
             val call: Call<ResponseBody> = app.fplService.getManagerData(managerId)
 
