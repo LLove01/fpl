@@ -6,7 +6,7 @@ var usersSchema = new Schema({
 	'username' : String,
 	'password' : String,
 	'managerId' : Number,
-	'competetorsIds' : Array
+	'competitorsIds' : Array
 });
 
 usersSchema.statics.authenticate = function(username, password, callback) {

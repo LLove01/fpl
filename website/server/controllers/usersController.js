@@ -1,4 +1,6 @@
 var UsersModel = require('../models/usersModel.js');
+const axios = require('axios');
+const BASE_URL = "https://fantasy.premierleague.com/api/";
 
 /**
  * usersController.js
@@ -48,12 +50,24 @@ module.exports = {
     },
 
     login: function (req, res) {
-        UsersModel.authenticate(req.body.username, req.body.password, function (error, user) {
+        UsersModel.authenticate(req.body.username, req.body.password, async function (error, user) {
             if (error || !user) {
                 res.status(401).json({"error" : "Wrong username or password"});
                 return;
             } else {
-                res.status(200).json({"username" : user.username, "managerId" : user.managerId});
+                console.log(user.competitorsIds.length)
+                let competirorsIds = user.competitorsIds;
+                let competitorsNamesAndIds = [];
+                for (let i = 0; i < competirorsIds.length; i++) {
+                    const responseManagerData = await axios.get(`${BASE_URL}entry/${competirorsIds[i]}`);
+
+                    const firstName = responseManagerData.data.player_first_name;
+                    const lastName = responseManagerData.data.player_last_name;
+                    const competetorId = competirorsIds[i];
+
+                    competitorsNamesAndIds.push({name: firstName + " " + lastName, id: competetorId})
+                }                
+                return res.status(200).json({"username" : user.username, "managerId" : user.managerId, competitors: competitorsNamesAndIds});
             }
         });
     },
@@ -99,9 +113,8 @@ module.exports = {
      * usersController.update()
      */
     update: function (req, res) {
-        var id = req.params.id;
-
-        UsersModel.findOne({_id: id}, function (err, users) {
+        var managerId = req.params.id;
+        UsersModel.findOne({managerId: managerId}, function (err, user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting users',
@@ -109,26 +122,36 @@ module.exports = {
                 });
             }
 
-            if (!users) {
+            if (!user) {
                 return res.status(404).json({
                     message: 'No such users'
                 });
             }
 
-            users.username = req.body.username ? req.body.username : users.username;
-			users.password = req.body.password ? req.body.password : users.password;
-			users.managerId = req.body.managerId ? req.body.managerId : users.managerId;
-			
-            users.save(function (err, users) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating users.',
-                        error: err
-                    });
-                }
+            let comptetitorId = parseInt(req.body.competirorsIds);
+            let competitors = user.competitorsIds;
 
-                return res.json(users);
-            });
+            const index = competitors.findIndex(competitor => competitor.id === comptetitorId.id);
+
+            if (index !== -1) {
+                user.competirorsIds = req.body.competirorsIds ? competitors.push(comptetitorId) : user.competirorsIds;
+                user.save(async function (err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when updating users.',
+                            error: err
+                        });
+                    }
+                    const responseManagerData = await axios.get(`${BASE_URL}entry/${comptetitorId}`);
+
+                    const firstName = responseManagerData.data.player_first_name;
+                    const lastName = responseManagerData.data.player_last_name;
+
+                    return res.status(200).json({name: firstName + " " + lastName});
+                });
+            } else {
+                return res.json("object already in array!");
+            }
         });
     },
 
