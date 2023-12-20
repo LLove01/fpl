@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_competitor_team.textViewManagerNa
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewManagerNameLabel2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationality2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewNationalityLabel2
+import kotlinx.android.synthetic.main.fragment_competitor_team.textViewStatusInfo
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPoints2
 import kotlinx.android.synthetic.main.fragment_competitor_team.textViewTotalPointsLabel2
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +47,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
     private lateinit var app: MyApplication
     private var competitorFullManager: Manager = Manager("", "", "", "", 0, 0, listOf())
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         app = (activity?.application as MyApplication)
@@ -60,6 +62,12 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         // We need to do this because adapter for spinner need MutableList<String> instead of MutableList<CompetitorManager>
         val competitorListForAdapter: MutableList<String> =
             competitorsManagerList!!.map { it.managerName } as MutableList<String>
+
+        if(competitorsManagerList.isEmpty()){
+            textViewStatusInfo.text = "No competitors added!"
+        }else{
+            textViewStatusInfo.text = "Loading, please wait. . ."
+        }
 
         // Create an ArrayAdapter using the defined array
         val adapter: ArrayAdapter<String> = ArrayAdapter(
@@ -95,6 +103,11 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         // We have different event if we already have something in the list
         buttonAdd.setOnClickListener {
             if (managerIdInput.text.isNotEmpty()) {
+                Snackbar.make(
+                    view,
+                    "Adding new competitors, please wait!",
+                    Snackbar.LENGTH_LONG
+                ).show()
                 val competitorId = managerIdInput.text.toString().toInt()
                 managerIdInput.text.clear()
                 addCompetitor(view, competitorId, adapter, competitorListForAdapter)
@@ -151,6 +164,11 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                             app.user?.competitors?.add(CompetitorManager(name, competitorId))
                             competitorListForAdapter.add(name)
                             adapter.notifyDataSetChanged()
+                            Snackbar.make(
+                                view,
+                                "NEW COMPETITOR ADDED!",
+                                Snackbar.LENGTH_LONG
+                            ).show()
 
                             if(app.user?.competitors?.size == 1){
                                 getData(view, competitorId.toString())
@@ -243,5 +261,6 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
         textViewTotalPointsLabel2.visibility = View.VISIBLE
         spinner.visibility = View.VISIBLE
         recyclerview2.visibility = View.VISIBLE
+        textViewStatusInfo.visibility = View.INVISIBLE
     }
 }
