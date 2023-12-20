@@ -59,7 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     } else {
                         Snackbar.make(
                             view,
-                            "FAILED GENERAL INFO!",
+                            "FAILED GETTING YOUR MANAGER DATA!",
                             Snackbar.LENGTH_LONG
                         ).show()
                     }
@@ -68,7 +68,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Snackbar.make(
                         view,
-                        "FAILED GENERAL INFO!",
+                        "FAILED GETTING YOUR MANAGER DATA!",
                         Snackbar.LENGTH_LONG
                     ).show()
                 }

@@ -159,7 +159,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                     } else {
                         Snackbar.make(
                             view,
-                            "FAILED GENERAL INFO!",
+                            "FAILED GETTING COMPETITOR WITH THIS ID!",
                             Snackbar.LENGTH_LONG
                         ).show()
                     }
@@ -168,7 +168,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Snackbar.make(
                         view,
-                        "FAILED GENERAL INFO!",
+                        "FAILED GETTING COMPETITOR WITH THIS ID!",
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
@@ -203,7 +203,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                     } else {
                         Snackbar.make(
                             view,
-                            "FAILED GENERAL INFO!",
+                            "FAILED GETTING MANAGER DATA WITH THIS MANAGER NAME!",
                             Snackbar.LENGTH_LONG
                         ).show()
                     }
@@ -212,7 +212,7 @@ class CompetitorTeamFragment : Fragment(R.layout.fragment_competitor_team) {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Snackbar.make(
                         view,
-                        "FAILED GENERAL INFO!",
+                        "FAILED GETTING MANAGER DATA WITH THIS MANAGER NAME!",
                         Snackbar.LENGTH_LONG
                     ).show()
                 }
